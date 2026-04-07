@@ -14,7 +14,7 @@ class MatrixSolverApp:
         self.libs = {}
         lib_names = {
             "Наивная (O0)": "./lib/libmatrix_solver_naive.so",
-            "Блочная векторизация (AVX)": "./lib/libmatrix_solver_block.so",
+            "Блочная векторизация": "./lib/libmatrix_solver_block.so",
             "Блочная + выравнивание": "./lib/libmatrix_solver_aligned.so"
         }
         for name, path in lib_names.items():
@@ -29,8 +29,9 @@ class MatrixSolverApp:
                     ]
                     lib.solve_linear_system.restype = ctypes.c_int
                     self.libs[name] = lib
-                except Exception:
-                    pass
+                    print(f"Loaded: {name}")
+                except Exception as e:
+                    print(f"Error loading {name}: {e}")
 
         if not self.libs:
             messagebox.showerror("Ошибка", "Библиотеки не найдены. Запустите make")
@@ -38,7 +39,7 @@ class MatrixSolverApp:
             return
 
         tk.Label(root, text="Размер матрицы:").grid(row=0, column=0, padx=5, pady=5)
-        self.n_var = tk.IntVar(value=200)
+        self.n_var = tk.IntVar(value=100)
         tk.Entry(root, textvariable=self.n_var, width=10).grid(row=0, column=1)
 
         tk.Label(root, text="Версия:").grid(row=1, column=0)
@@ -110,4 +111,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = MatrixSolverApp(root)
     root.mainloop()
-    
